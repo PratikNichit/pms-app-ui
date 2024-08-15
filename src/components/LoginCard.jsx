@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../assets/images/trackify-logo1.png";
+import logo from "../assets/images/trackify-white.png";
 import "./LoginCard.css";
 import { Typography, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,6 @@ const LoginCard = () => {
           <TextField
             label="Email Id"
             variant="outlined"
-            className="textBox"
             onChange={(event) => setEmail(event.target.value)}
             fullWidth
             InputProps={{
@@ -63,7 +62,6 @@ const LoginCard = () => {
           <TextField
             label="Password"
             variant="outlined"
-            className="textBox"
             onChange={(event) => setpassword(event.target.value)}
             fullWidth
             type="password"
