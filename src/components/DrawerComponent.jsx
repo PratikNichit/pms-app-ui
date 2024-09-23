@@ -19,8 +19,8 @@ const DrawerComponent = ({ menuItems, onNavigate }) => {
       "& .MuiDrawer-paper": {
         width: drawerWidth,
         boxSizing: "border-box",
-        backgroundColor: "#061e33", // Set the desired background color here
-        color: "#fff", // Optional: Set the text color to white
+        backgroundColor: "#061e33",
+        color: "#fff",
       },
     },
     active: {
