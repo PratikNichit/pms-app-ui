@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/layout/MainLayout";
 import KpiGrading from "./pages/KpiGrading";
+import KpiCard from "./components/KpiCard";
 
 function App() {
   return (

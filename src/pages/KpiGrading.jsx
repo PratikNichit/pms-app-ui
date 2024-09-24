@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -13,14 +13,33 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
+import "./KpiGrading.css";
+import KpiCard from "../components/KpiCard"; // assuming KpiCard is correctly defined
+
+const initialKpis = [
+  {
+    kpi: "KPI 1",
+    description: "Description 1",
+    comments: "Comments 1",
+    rating: "Very Good",
+    file: "file1.pdf",
+  },
+  {
+    kpi: "KPI 2",
+    description: "Description 2",
+    comments: "Comments 2",
+    rating: "Outstanding",
+    file: "file2.pdf",
+  },
+];
+
 const KpiGrading = () => {
-  const customeStyle = {
+  const customStyle = {
     field: {
       marginTop: "20px",
       marginBottom: "10px",
       display: "block",
     },
-
     submitButton: {
       marginTop: "10px",
     },
@@ -38,15 +57,53 @@ const KpiGrading = () => {
     width: 1,
   });
 
+  const [kpi, setKpi] = useState("");
+  const [description, setDescription] = useState("");
+  const [comments, setComments] = useState("");
+  const [rating, setRating] = useState("");
+  const [file, setFile] = useState(null);
+  const [kpiList, setKpiList] = useState(initialKpis);
+
+  // Handle adding a new KPI to the list
+  const handleAddKpi = () => {
+    const newKpi = {
+      kpi,
+      description,
+      comments,
+      rating,
+      file: file ? file.name : "No file selected", // store the file name
+    };
+    setKpiList([...kpiList, newKpi]); // update the list with the new KPI
+    // Clear the input fields
+    setKpi("");
+    setDescription("");
+    setComments("");
+    setRating("");
+    setFile(null);
+  };
+
+  // Handle deleting a KPI from the list
+  const handleDelete = (deleteKpi) => {
+    const updatedList = kpiList.filter((kpiItem) => kpiItem.kpi !== deleteKpi);
+    setKpiList(updatedList);
+  };
+
   return (
-    <Container>
+    <Container
+      sx={{
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        padding: "20px",
+        mt: 4,
+      }}
+    >
       <Typography
         variant="h5"
         color="textSecondary"
         component="h1"
         gutterBottom
       >
-        Kpi Grading
+        KPI Grading
       </Typography>
       <form noValidate autoComplete="off">
         <TextField
@@ -54,7 +111,9 @@ const KpiGrading = () => {
           label="KPI"
           fullWidth
           required
-          sx={customeStyle.field}
+          sx={customStyle.field}
+          value={kpi}
+          onChange={(event) => setKpi(event.target.value)}
         />
         <TextField
           variant="outlined"
@@ -63,7 +122,9 @@ const KpiGrading = () => {
           required
           multiline
           rows={2}
-          sx={customeStyle.field}
+          sx={customStyle.field}
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
         />
         <TextField
           variant="outlined"
@@ -72,45 +133,48 @@ const KpiGrading = () => {
           required
           multiline
           rows={2}
-          sx={customeStyle.field}
+          sx={customStyle.field}
+          value={comments}
+          onChange={(event) => setComments(event.target.value)}
         />
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
           <Typography
             variant="body1"
-            color="textSecondary"
-            component="h1"
+            component="span"
             sx={{ mt: 1 }}
             gutterBottom
           >
-            Choice File
+            Choose File
           </Typography>
           <Button
             component="label"
-            role={undefined}
             variant="contained"
-            tabIndex={-1}
             startIcon={<CloudUploadIcon />}
             sx={{ mt: 1 }}
           >
-            Upload files
+            Upload file
             <VisuallyHiddenInput
               type="file"
-              onChange={(event) => console.log(event.target.files)}
-              multiple
+              onChange={(event) => setFile(event.target.files[0])} // single file
             />
           </Button>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            {file ? file.name : "No file selected"}
+          </Typography>
         </Box>
         <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
-          <InputLabel id="demo-simple-select-label">Rating </InputLabel>
+          <InputLabel id="rating-label">Rating</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Age"
+            labelId="rating-label"
+            id="rating-select"
+            value={rating}
+            onChange={(event) => setRating(event.target.value)}
+            label="Rating"
           >
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
+            <MenuItem value="Improvement Needed">Improvement Needed</MenuItem>
+            <MenuItem value="Satisfactory">Satisfactory</MenuItem>
+            <MenuItem value="Very Good">Very Good</MenuItem>
+            <MenuItem value="Outstanding">Outstanding</MenuItem>
           </Select>
         </FormControl>
 
@@ -119,12 +183,29 @@ const KpiGrading = () => {
           variant="contained"
           color="primary"
           endIcon={<AddIcon fontSize="small" />}
-          sx={customeStyle.submitButton}
-          onClick={(event) => console.log(event + "hello")}
+          sx={customStyle.submitButton}
+          onClick={handleAddKpi}
         >
           Add KPI
         </Button>
       </form>
+
+      <Container sx={{ mt: 3 }}>
+        <ul>
+          {kpiList.map((kpiItem, index) => (
+            <li key={index}>
+              <KpiCard
+                kpi={kpiItem.kpi}
+                description={kpiItem.description}
+                comments={kpiItem.comments}
+                rating={kpiItem.rating}
+                file={kpiItem.file}
+                onDelete={() => handleDelete(kpiItem.kpi)} // passing the delete function
+              />
+            </li>
+          ))}
+        </ul>
+      </Container>
     </Container>
   );
 };
