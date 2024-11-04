@@ -3,6 +3,8 @@ import logo from "../assets/images/trackify-white.png";
 import "./LoginCard.css";
 import { Typography, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { APIURLs, BaseURL } from "../APIURLs";
+import { GetApi } from "../Api/GetApi";
 
 const LoginCard = () => {
   const navigate = useNavigate();
@@ -12,6 +14,20 @@ const LoginCard = () => {
   const handleSubmit = () => {
     console.log(email, password);
     navigate("/");
+  };
+
+  const HandleLogin = () => {
+    // Define the API endpoint
+    const url = BaseURL + APIURLs.GetEmployeeVM;
+
+    // Call GetApi and handle the promise it returns
+    GetApi(url)
+      .then((data) => {
+        console.log(data); // Log the data once received
+      })
+      .catch((error) => {
+        console.error("Error in HandleLogin:", error);
+      });
   };
 
   return (
@@ -94,7 +110,7 @@ const LoginCard = () => {
             variant="contained"
             color="secondary"
             sx={{ margin: "50px" }}
-            onClick={handleSubmit}
+            onClick={HandleLogin}
           >
             Login
           </Button>
